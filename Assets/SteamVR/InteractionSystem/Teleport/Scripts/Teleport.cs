@@ -13,6 +13,10 @@ namespace Valve.VR.InteractionSystem
 	//-------------------------------------------------------------------------
 	public class Teleport : MonoBehaviour
     {
+
+		[SerializeField, Header("是否顯示教學")]
+		private bool showTutorial;
+
         public SteamVR_Action_Boolean teleportAction = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("Teleport");
 
         public LayerMask traceLayerMask;
@@ -171,6 +175,8 @@ namespace Valve.VR.InteractionSystem
 
 
 		//-------------------------------------------------
+		private GameObject goBasketballCenter;
+
 		void Start()
         {
             teleportMarkers = GameObject.FindObjectsOfType<TeleportMarkerBase>();
@@ -188,7 +194,9 @@ namespace Valve.VR.InteractionSystem
 
 			CheckForSpawnPoint();
 
-			Invoke( "ShowTeleportHint", 5.0f );
+		if(showTutorial)	Invoke( "ShowTeleportHint", 5.0f );
+
+			goBasketballCenter = GameObject.Find("籃球框感應");
 		}
 
 
@@ -867,6 +875,8 @@ namespace Valve.VR.InteractionSystem
 
 			if ( teleportPoint != null )
 			{
+				print("兩分");
+				goBasketballCenter.SendMessage("ChangeScore",2);
 				teleportPosition = teleportPoint.transform.position;
 
 				//Teleport to a new scene
@@ -881,6 +891,8 @@ namespace Valve.VR.InteractionSystem
 			TeleportArea teleportArea = teleportingToMarker as TeleportArea;
 			if ( teleportArea != null )
 			{
+				print("三分");
+				goBasketballCenter.SendMessage("ChangeScore", 3);
 				if ( floorFixupMaximumTraceDistance > 0.0f )
 				{
 					RaycastHit raycastHit;
